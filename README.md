@@ -2,7 +2,7 @@
 
 nvidia gpu: Tesla T4
 
-cpu: 
+cpu: Xeon(G) Gold 6130
 
 ubuntu: 16.04
 
