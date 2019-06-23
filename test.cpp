@@ -81,32 +81,22 @@ int main(int argc, char* argv[])
   ImageNet2 imagenet;
   imagenet.load_models(model_path, 0);
 
-#ifdef WIN32
-  DWORD start = GetTickCount();
-#else
-  gettimeofday(&timestart, NULL);
-#endif
+  double totaltime = 0;
 
-  std::cout << "start" << std::endl;
-  DetectContext DC(imgs_path, 0);
-
-  while((!DC.isStop()) || (!DC.isEmpty())){
-    std::unordered_map<int, cv::Mat> images;
-    if(!DC.fetchImage2(images)) continue;
-    for(std::unordered_map<int, cv::Mat>::iterator it = images.begin(); it!= images.end(); it++)
-    {
-      imagenet.inference_gpu({it->second},res);
-      final_res[it->first] = res[0];
-    }
+  std::unordered_map<int, cv::Mat> imgs = imagenet.readPictureVec3(imgs_path, 1, 50000);
+  std::cout << "img num: " << imgs.size() << std::endl;
+  for(std::unordered_map<int, cv::Mat>::iterator it = images.begin(); it!= images.end(); it++)
+  {
+      float* data;
+      imagenet.pre_process_gpu(it->second, data);
+      gettimeofday(&timestart, NULL);
+      imagenet.inference_gpu(data,res);
+      final_res[it->first] = res;
+      gettimeofday(&timeend, NULL);
+      double m_dectime = (timeend.tv_sec - timestart.tv_sec) * 1000 + (timeend.tv_usec - timestart.tv_usec) / 1000;
+      totaltime += m_dectime;
   }
-
-#ifdef WIN32
-  std::cout << GetTickCount() - start << std::endl;
-#else
-  gettimeofday(&timeend, NULL);
-  double m_dectime = (timeend.tv_sec - timestart.tv_sec) * 1000 + (timeend.tv_usec - timestart.tv_usec) / 1000;
-  std::cout << "inference time : " << m_dectime << std::endl;
-#endif
+  std::cout << "inference time : " << totaltime/ imgs.size()<< std::endl;
 
   float top5 = eval(final_res);
   std::cout << top5 << std::endl;
