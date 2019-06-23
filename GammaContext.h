@@ -26,7 +26,7 @@ public:
   bool inference_gpu(float* src, std::vector<int>& drc);
   bool set_device(int dev);
   bool pre_process(cv::Mat & src, float* dst);
-  bool pre_process(cv::Mat & src, float* & dst);
+  bool pre_process_gpu(cv::Mat & src, float* & dst);
 
 private:
   void * trt_core_;
