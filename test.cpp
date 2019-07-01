@@ -93,7 +93,7 @@ int main(int argc, char* argv[])
       imagenet.inference_gpu(data,res);
       final_res[it->first] = res;
       gettimeofday(&timeend, NULL);
-      double m_dectime = (timeend.tv_sec - timestart.tv_sec) * 1000 + (timeend.tv_usec - timestart.tv_usec) / 1000;
+      double m_dectime = (timeend.tv_sec - timestart.tv_sec) * 1000.0 + (timeend.tv_usec - timestart.tv_usec) / 1000.0;
       totaltime += m_dectime;
   }
   std::cout << "inference time : " << totaltime/ imgs.size()<< std::endl;

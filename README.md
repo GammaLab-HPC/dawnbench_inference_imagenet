@@ -18,6 +18,6 @@ framework: caffe
 
 model: resnet50
 
-latency: 1.62ms
+latency: 0.82ms
 
-Top5 error: 0.06648
+Top5 error: 0.0699
